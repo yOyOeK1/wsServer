@@ -82,6 +82,7 @@ struct ws_connection
 	/* IP address and port. */
 	char ip[1025]; /* NI_MAXHOST. */
 	char port[32]; /* NI_MAXSERV. */
+	char name[1025];
 
 	/* Ping/Pong IDs and locks. */
 	int32_t last_pong_id;
@@ -511,6 +512,14 @@ static void set_client_address(struct ws_connection *client)
  *
  * @note The returned string is static, no need to free up memory.
  */
+char *ws_getSName(ws_cli_conn_t client)
+{
+	struct ws_connection *cli = get_client_by_cid(client);
+	if (!CLIENT_VALID(cli))
+		return (NULL);
+
+	return (cli->ws_srv.name);
+}
 char *ws_getaddress(ws_cli_conn_t client)
 {
 	struct ws_connection *cli = get_client_by_cid(client);
@@ -2074,9 +2083,10 @@ int ws_socket(struct ws_server *ws_srv)
 	/* Accept connections. */
 	ws_prm->sock = sock;
 
-	if (!ws_srv->thread_loop)
+	if (!ws_srv->thread_loop){
 		ws_accept(ws_prm);
-	else
+		printf("accepted connection\n");
+	}else
 	{
 		if (pthread_create(&accept_thread, NULL, ws_accept, (void *)ws_prm))
 			panic("Could not create the client thread!");
