@@ -82,6 +82,9 @@ struct ws_connection
 	/* IP address and port. */
 	char ip[1025]; /* NI_MAXHOST. */
 	char port[32]; /* NI_MAXSERV. */
+
+	/* id and name for cmachine2 Node */
+	int  id;
 	char name[1025];
 
 	/* Ping/Pong IDs and locks. */
@@ -512,6 +515,14 @@ static void set_client_address(struct ws_connection *client)
  *
  * @note The returned string is static, no need to free up memory.
  */
+int ws_getSId(ws_cli_conn_t client)
+{
+	struct ws_connection *cli = get_client_by_cid(client);
+	if (!CLIENT_VALID(cli))
+		return -1;
+
+	return (cli->ws_srv.id);
+}
 char *ws_getSName(ws_cli_conn_t client)
 {
 	struct ws_connection *cli = get_client_by_cid(client);

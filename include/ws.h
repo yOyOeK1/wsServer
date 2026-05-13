@@ -286,6 +286,7 @@ extern "C" {
 		uint16_t port;
 
 		const char *name;
+		int id;
 		/**
 		 * @brief Whether if the ws_socket() should create a new thread
 		 * and be non-blocking (1) or not (0).
@@ -316,6 +317,7 @@ extern "C" {
 	extern char *ws_getaddress(ws_cli_conn_t client);
 	extern char *ws_getport(ws_cli_conn_t client);
 	extern char *ws_getSName(ws_cli_conn_t client);
+	extern int ws_getSId(ws_cli_conn_t client);
 	extern int ws_sendframe(
 		ws_cli_conn_t client, const char *msg, uint64_t size, int type);
 	extern int ws_sendframe_bcast(
